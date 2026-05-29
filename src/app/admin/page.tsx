@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { verifyAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import AdminDashboard from "./AdminDashboard";
+import { Experience } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +21,7 @@ export default async function AdminPage() {
   });
 
   // Konversi objek database ke serializable JSON format
-  const serializedExperiences = experiences.map((exp) => ({
+  const serializedExperiences = experiences.map((exp: Experience) => ({
     id: exp.id,
     title: exp.title,
     company: exp.company,
