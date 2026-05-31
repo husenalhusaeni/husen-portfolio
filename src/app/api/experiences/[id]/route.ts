@@ -27,7 +27,7 @@ export async function PUT(
       );
     }
 
-    const experience = await prisma.experience.update({
+    const experience = await (prisma.experience as any).update({
       where: { id },
       data: {
         type: type || "WORK",

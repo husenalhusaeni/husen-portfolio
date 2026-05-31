@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const experience = await prisma.experience.create({
+    const experience = await (prisma.experience as any).create({
       data: {
         type: type || "WORK",
         title,

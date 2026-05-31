@@ -21,7 +21,7 @@ export default async function AdminPage() {
   });
 
   // Konversi objek database ke serializable JSON format
-  const serializedExperiences = experiences.map((exp: Experience) => ({
+  const serializedExperiences = experiences.map((exp: any) => ({
     id: exp.id,
     type: exp.type,
     title: exp.title,
