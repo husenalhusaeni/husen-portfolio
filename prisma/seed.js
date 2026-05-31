@@ -1,8 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
-const { PrismaBetterSqlite3 } = require('@prisma/adapter-better-sqlite3');
 
-const adapter = new PrismaBetterSqlite3({ url: 'dev.db' });
-const prisma = new PrismaClient({ adapter });
+// Hapus adapter SQLite, langsung inisiasi Prisma standar
+const prisma = new PrismaClient();
 
 async function main() {
   // Bersihkan data lama jika ada

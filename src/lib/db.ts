@@ -1,19 +1,25 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
-
-let prisma: PrismaClient;
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
 
 declare global {
   // eslint-disable-next-line no-var
   var prisma: PrismaClient | undefined;
 }
 
+let prisma: PrismaClient;
+
 if (process.env.NODE_ENV === "production") {
-  const adapter = new PrismaBetterSqlite3({ url: "dev.db" });
+  // Buat koneksi pool ke Supabase menggunakan driver pg
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const adapter = new PrismaPg(pool);
+
+  // Masukkan adapter ke dalam Prisma Client
   prisma = new PrismaClient({ adapter });
 } else {
   if (!global.prisma) {
-    const adapter = new PrismaBetterSqlite3({ url: "dev.db" });
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const adapter = new PrismaPg(pool);
     global.prisma = new PrismaClient({ adapter });
   }
   prisma = global.prisma;

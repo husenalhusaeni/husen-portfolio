@@ -227,7 +227,7 @@ export default function Home() {
             <div className="polaroid-snapshot-frame">
               <div className="polaroid-img-wrap">
                 <Image
-                  src="/academic_story.png"
+                  src="/academic_story1.jpeg"
                   alt="Academic Foundation Illustration"
                   fill
                   className="polaroid-img"
