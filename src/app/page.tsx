@@ -98,8 +98,8 @@ export default function Home() {
           <Image
             src="/husain.png"
             alt="Husain Logo"
-            width={110}
-            height={35}
+            width={100}
+            height={25}
             style={{ objectFit: "contain" }}
             priority
           />
@@ -236,7 +236,7 @@ export default function Home() {
               </div>
               <div className="polaroid-caption">
                 <span className="handwritten-text">
-                  {lang === "EN" ? "My study corner - Management meets IoT" : "Sudut belajar saya - Manajemen & IoT"}
+                  {lang === "EN" ? "My study corner - Management" : "Sudut belajar saya - Manajemen"}
                 </span>
               </div>
             </div>
@@ -612,7 +612,7 @@ export default function Home() {
               </svg>
               {t.btnEmail}
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="btn-secondary">
+            <a href="https://www.linkedin.com/in/muhammad-sholehudin-al-hussaeni-ba98801a6/?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" className="btn-secondary">
               {t.btnLinkedIn}
             </a>
           </div>
