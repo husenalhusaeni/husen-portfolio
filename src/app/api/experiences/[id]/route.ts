@@ -17,11 +17,12 @@ export async function PUT(
 
     const { id } = await params;
     const body = await request.json();
-    const { title, company, location, startDate, endDate, description, imageUrl } = body;
+    const { type, title, company, location, startDate, endDate, description, imageUrl } = body;
 
-    if (!title || !company || !location || !startDate || !endDate || !description) {
+    const isTraining = type === "TRAINING";
+    if (!title || !company || !location || !startDate || (!isTraining && !endDate) || !description) {
       return NextResponse.json(
-        { success: false, message: "Semua field kecuali gambar wajib diisi" },
+        { success: false, message: "Semua field wajib diisi (kecuali tanggal selesai untuk Pelatihan dan gambar)" },
         { status: 400 }
       );
     }
@@ -29,6 +30,7 @@ export async function PUT(
     const experience = await prisma.experience.update({
       where: { id },
       data: {
+        type: type || "WORK",
         title,
         company,
         location,

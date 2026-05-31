@@ -42,10 +42,10 @@ export default function Login() {
       <div className="login-card glass-card">
         <div className="login-header">
           <Link href="/" style={{ textDecoration: "none", display: "inline-block", marginBottom: "16px" }}>
-            <span className="hero-welcome">&larr; Kembali ke Portfolio</span>
+            <span className="hero-welcome">Kembali ke Portfolio</span>
           </Link>
-          <h2 className="login-title">Area Admin</h2>
-          <p className="login-subtitle">Masukkan kata sandi untuk masuk ke manajemen pengalaman kerja</p>
+          <h2 className="login-title">Admin</h2>
+          <p className="login-subtitle">Masukkan kata sandi</p>
         </div>
 
         {error && <div className="error-message">{error}</div>}

@@ -7,6 +7,7 @@ import Link from "next/link";
 
 interface Experience {
   id: string;
+  type: string;
   title: string;
   company: string;
   location: string;
@@ -22,6 +23,7 @@ interface AdminDashboardProps {
 
 export default function AdminDashboard({ initialExperiences }: AdminDashboardProps) {
   const [experiences, setExperiences] = useState<Experience[]>(initialExperiences);
+  const [type, setType] = useState("WORK");
   const [title, setTitle] = useState("");
   const [company, setCompany] = useState("");
   const [location, setLocation] = useState("");
@@ -91,6 +93,7 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
     setLoading(true);
 
     const payload = {
+      type,
       title,
       company,
       location,
@@ -118,11 +121,11 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
           setExperiences(
             experiences.map((exp) => (exp.id === editingId ? data.data : exp))
           );
-          setSuccess("Pengalaman kerja berhasil diperbarui!");
+          setSuccess("Data berhasil diperbarui!");
         } else {
           // Mode Tambah: Masukkan ke paling atas list
           setExperiences([data.data, ...experiences]);
-          setSuccess("Pengalaman kerja baru berhasil ditambahkan!");
+          setSuccess("Data baru berhasil ditambahkan!");
         }
         resetForm();
       } else {
@@ -137,7 +140,7 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
 
   // Handler Hapus Pengalaman
   async function handleDelete(id: string) {
-    if (!confirm("Apakah Anda yakin ingin menghapus pengalaman kerja ini?")) return;
+    if (!confirm("Apakah Anda yakin ingin menghapus data ini?")) return;
 
     setError("");
     setSuccess("");
@@ -148,10 +151,10 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
 
       if (data.success) {
         setExperiences(experiences.filter((exp) => exp.id !== id));
-        setSuccess("Pengalaman kerja berhasil dihapus.");
+        setSuccess("Data berhasil dihapus.");
         if (editingId === id) resetForm();
       } else {
-        setError(data.message || "Gagal menghapus pengalaman.");
+        setError(data.message || "Gagal menghapus data.");
       }
     } catch (err) {
       setError("Gagal terhubung ke server untuk menghapus.");
@@ -161,6 +164,7 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
   // Handler Masuk Mode Edit
   function handleEditClick(exp: Experience) {
     setEditingId(exp.id);
+    setType(exp.type || "WORK");
     setTitle(exp.title);
     setCompany(exp.company);
     setLocation(exp.location);
@@ -175,6 +179,7 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
   // Reset Input Form
   function resetForm() {
     setEditingId(null);
+    setType("WORK");
     setTitle("");
     setCompany("");
     setLocation("");
@@ -192,8 +197,8 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
           <Link href="/" style={{ textDecoration: "none", color: "var(--accent-secondary)", fontSize: "0.9rem", fontWeight: "600" }}>
             &larr; Lihat Website Utama
           </Link>
-          <h1 style={{ marginTop: "4px" }}>Manajemen Pengalaman Kerja</h1>
-          <p>Selamat datang, Administrator. Kelola lini masa profesional Anda secara dinamis.</p>
+          <h1 style={{ marginTop: "4px" }}>Manajemen Portofolio Dinamis</h1>
+          <p>Selamat datang, Administrator. Kelola Pengalaman Kerja, Project, dan Pelatihan Anda secara terintegrasi.</p>
         </div>
         <div className="admin-actions-top">
           <button onClick={handleLogout} className="btn-secondary" style={{ padding: "8px 18px", fontSize: "0.9rem" }}>
@@ -210,15 +215,31 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
         {/* Kolom 1: Formulir Input */}
         <div className="admin-form-card glass-card">
           <h2 className="admin-form-title">
-            {editingId ? "Edit Pengalaman Kerja" : "Tambah Pengalaman Kerja Baru"}
+            {editingId ? "Edit Data Portofolio" : "Tambah Data Portofolio Baru"}
           </h2>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label className="form-label">Jabatan Pekerjaan *</label>
+              <label className="form-label">Tipe Data *</label>
+              <select
+                className="form-input"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                required
+              >
+                <option value="WORK">Pengalaman Kerja</option>
+                <option value="PROJECT">Project Portofolio</option>
+                <option value="TRAINING">Pelatihan & Sertifikasi</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                {type === "WORK" ? "Jabatan Pekerjaan *" : type === "PROJECT" ? "Nama Project *" : "Nama Pelatihan / Sertifikasi *"}
+              </label>
               <input
                 type="text"
                 className="form-input"
-                placeholder="Contoh: Customer Service Supervisor"
+                placeholder={type === "WORK" ? "Contoh: Customer Service Supervisor" : type === "PROJECT" ? "Contoh: Digitalisasi Pelaporan Transaksi Tol" : "Contoh: Sertifikasi Pelayanan Prima"}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
@@ -226,11 +247,13 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
             </div>
 
             <div className="form-group">
-              <label className="form-label">Nama Perusahaan *</label>
+              <label className="form-label">
+                {type === "WORK" ? "Nama Perusahaan *" : type === "PROJECT" ? "Nama Perusahaan / Organisasi *" : "Lembaga Penyelenggara *"}
+              </label>
               <input
                 type="text"
                 className="form-input"
-                placeholder="Contoh: PT Jasa Marga (Persero) Tbk"
+                placeholder={type === "WORK" || type === "PROJECT" ? "Contoh: PT Jasa Marga (Persero) Tbk" : "Contoh: MarkPlus Institute"}
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
                 required
@@ -251,16 +274,16 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
               </div>
 
               <div className="form-group">
-                <label className="form-label">Logo / Gambar Perusahaan</label>
+                <label className="form-label">Dokumentasi Gambar / Logo</label>
                 <div className="image-upload-wrap">
-                  <div className="image-preview-box">
+                  {/* <div className="image-preview-box">
                     <Image
                       src={imageUrl || "/avatar.jpg"}
                       alt="Preview logo"
                       width={50}
                       height={50}
                     />
-                  </div>
+                  </div> */}
                   <div className="upload-btn-wrap">
                     <span className="upload-label">
                       {uploading ? "Mengunggah..." : "Pilih File"}
@@ -279,11 +302,13 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
               <div className="form-group">
-                <label className="form-label">Tanggal Mulai *</label>
+                <label className="form-label">
+                  {type === "TRAINING" ? "Tanggal Perolehan *" : "Tanggal Mulai *"}
+                </label>
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="Contoh: Januari 2023"
+                  placeholder={type === "TRAINING" ? "Contoh: Agustus 2023" : "Contoh: Januari 2023"}
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                   required
@@ -291,23 +316,25 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
               </div>
 
               <div className="form-group">
-                <label className="form-label">Tanggal Selesai *</label>
+                <label className="form-label">
+                  {type === "TRAINING" ? "Masa Berlaku (Jika ada)" : "Tanggal Selesai *"}
+                </label>
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="Contoh: Sekarang atau Desember 2024"
+                  placeholder={type === "TRAINING" ? "Contoh: Selamanya / 2026" : "Contoh: Sekarang atau Desember 2024"}
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  required
+                  required={type !== "TRAINING"}
                 />
               </div>
             </div>
 
             <div className="form-group">
-              <label className="form-label">Deskripsi Pekerjaan / Tanggung Jawab *</label>
+              <label className="form-label">Deskripsi & Tanggung Jawab *</label>
               <textarea
                 className="form-textarea"
-                placeholder="• Tuliskan poin tanggung jawab utama Anda di sini&#10;• Gunakan simbol bullet (•) untuk baris baru agar tampil rapi di timeline"
+                placeholder="• Tuliskan poin penjelasan utama Anda di sini&#10;• Gunakan simbol bullet (•) untuk baris baru agar tampil rapi di website utama"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
@@ -316,7 +343,7 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
 
             <div style={{ display: "flex", gap: "12px", marginTop: "10px" }}>
               <button type="submit" className="form-button" style={{ flexGrow: 2 }} disabled={loading || uploading}>
-                {loading ? "Menyimpan..." : editingId ? "Perbarui Pengalaman" : "Tambahkan Pengalaman"}
+                {loading ? "Menyimpan..." : editingId ? "Perbarui Data" : "Tambahkan Data"}
               </button>
               {editingId && (
                 <button type="button" onClick={resetForm} className="btn-secondary" style={{ flexGrow: 1, borderRadius: "12px" }}>
@@ -327,13 +354,13 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
           </form>
         </div>
 
-        {/* Kolom 2: Daftar Pengalaman Kerja Saat Ini */}
+        {/* Kolom 2: Daftar Portofolio Terdaftar */}
         <div>
-          <h2 className="admin-list-title">Pengalaman Kerja Terdaftar ({experiences.length})</h2>
+          <h2 className="admin-list-title">Data Terdaftar ({experiences.length})</h2>
           <div className="admin-list">
             {experiences.length === 0 ? (
               <div className="glass-card" style={{ padding: "30px", textAlign: "center", color: "var(--text-secondary)" }}>
-                Belum ada pengalaman kerja terdaftar. Gunakan formulir di sebelah kiri untuk menambahkan.
+                Belum ada data terdaftar. Gunakan formulir di sebelah kiri untuk menambahkan.
               </div>
             ) : (
               experiences.map((exp) => (
@@ -348,8 +375,16 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
                     />
                     <div>
                       <div className="admin-item-title">{exp.title}</div>
-                      <div className="admin-item-company">
-                        {exp.company} ({exp.startDate} - {exp.endDate})
+                      <div className="admin-item-company" style={{ display: "flex", gap: "8px", alignItems: "center", marginTop: "4px" }}>
+                        <span className={`badge ${exp.type === "PROJECT" ? "badge-project" :
+                            exp.type === "TRAINING" ? "badge-training" : "badge-work"
+                          }`}>
+                          {exp.type === "PROJECT" ? "Project" :
+                            exp.type === "TRAINING" ? "Pelatihan" : "Kerja"}
+                        </span>
+                        <span style={{ fontSize: "0.9rem", color: "var(--text-secondary)" }}>
+                          {exp.company} ({exp.startDate} - {exp.endDate || "Selesai"})
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -357,7 +392,7 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
                     <button
                       onClick={() => handleEditClick(exp)}
                       className="btn-icon btn-icon-edit"
-                      title="Edit Pengalaman"
+                      title="Edit Data"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.83 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
@@ -366,7 +401,7 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
                     <button
                       onClick={() => handleDelete(exp.id)}
                       className="btn-icon btn-icon-delete"
-                      title="Hapus Pengalaman"
+                      title="Hapus Data"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />

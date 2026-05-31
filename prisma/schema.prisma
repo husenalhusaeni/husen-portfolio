@@ -11,6 +11,7 @@ datasource db {
 
 model Experience {
   id          String   @id @default(uuid())
+  type        String   @default("WORK")
   title       String
   company     String
   location    String
