@@ -883,73 +883,7 @@ footer {
   background: rgba(6, 182, 212, 0.05);
 }
 
-/* Responsive Breakpoints */
-@media (max-width: 968px) {
-  .hero-section {
-    padding-top: 130px;
-    padding-bottom: 60px;
-  }
-
-  .hero-name {
-    font-size: 2.8rem;
-    white-space: normal;
-  }
-
-  .hero-subtitle {
-    font-size: 1.25rem;
-  }
-
-  .about-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-
-  .admin-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-}
-
-@media (max-width: 768px) {
-  .navbar {
-    padding: 16px 20px;
-  }
-
-  .nav-links {
-    display: none;
-    /* Kita bisa menyembunyikan nav di mobile demi simplisitas */
-  }
-
-  section {
-    padding: 60px 20px;
-  }
-
-  .hero-name {
-    font-size: 2.5rem;
-  }
-
-  .timeline::after {
-    left: 20px;
-  }
-
-  .timeline-item {
-    padding-left: 50px;
-  }
-
-  .timeline-dot {
-    left: 20px;
-  }
-
-  .timeline-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .timeline-meta {
-    text-align: left;
-  }
-}
+/* Responsive Breakpoints (Cleaned & Consolidated at the bottom of stylesheet) */
 
 /* Badges Kategori */
 .badge {
@@ -1847,32 +1781,321 @@ footer {
   transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Responsive Overrides */
-@media (max-width: 968px) {
-  .story-grid {
-    grid-template-columns: 1fr;
+/* ==========================================================================
+   MOBILE & RESPONSIVE REFINEMENTS
+   ========================================================================== */
+
+/* Hide Hamburger by default on Desktop */
+.menu-toggle {
+  display: none;
+}
+
+/* Tablet & Smaller Screens (< 1024px) */
+@media (max-width: 1024px) {
+  section, .story-section {
+    padding: 80px 5% 60px !important;
+  }
+  .story-grid, .story-grid-reverse {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+  .story-visual-side {
+    position: relative !important;
+    top: 0 !important;
+    margin-bottom: 20px !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  .story-grid-reverse .story-visual-side {
+    order: 2 !important;
+  }
+  .story-grid-reverse .story-content-side {
+    order: 1 !important;
+  }
+  .polaroid-snapshot-frame {
+    max-width: 340px !important;
+    margin: 0 auto !important;
+  }
+  .admin-grid {
+    grid-template-columns: 1fr !important;
     gap: 40px;
   }
-  
-  .story-grid-reverse {
-    grid-template-columns: 1fr;
+}
+
+/* Mobile Screen (< 768px) */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 5% !important;
   }
   
-  .story-visual-side {
-    position: relative;
-    top: 0;
-    margin-bottom: 20px;
+  /* Show Hamburger Menu Toggle */
+  .menu-toggle {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 22px;
+    height: 16px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1002;
   }
   
-  .story-grid-reverse .story-visual-side {
-    order: 2;
+  .menu-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: var(--text-primary);
+    border-radius: 4px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
   
-  .story-grid-reverse .story-content-side {
-    order: 1;
+  .menu-toggle.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
   }
   
-  .story-section {
-    padding: 70px 24px;
+  .menu-toggle.open span:nth-child(2) {
+    opacity: 0;
+    transform: scale(0);
+  }
+  
+  .menu-toggle.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Hamburger Drawer */
+  .nav-links {
+    display: flex !important; /* Override hide */
+    flex-direction: column;
+    position: fixed;
+    top: 50px; /* Right below the nav */
+    left: 0;
+    width: 100vw;
+    height: auto;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 24px 5% 32px;
+    gap: 16px;
+    transform: translateY(-150%);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    z-index: 999;
+    box-shadow: 0 10px 40px rgba(124, 58, 237, 0.08);
+    pointer-events: none;
+    margin: 0;
+  }
+
+  .nav-links.mobile-active {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  .nav-links li {
+    width: 100%;
+  }
+
+  .nav-links a {
+    display: block;
+    width: 100%;
+    font-size: 1.05rem;
+    font-weight: 600;
+    padding: 10px 0;
+    color: var(--text-primary) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    text-align: center;
+    transition: var(--transition-smooth);
+  }
+  
+  .nav-links a:hover {
+    color: var(--accent-primary) !important;
+    background: rgba(124, 58, 237, 0.03);
+    border-radius: 8px;
+  }
+  
+  .nav-links a::after {
+    display: none !important; /* Hide bottom line hover effect on mobile */
+  }
+
+  /* Structural Elements */
+  section, .story-section {
+    padding: 60px 4% 50px !important;
+  }
+
+  .hero-section {
+    padding-top: 140px !important;
+    padding-bottom: 50px !important;
+  }
+
+  .hero-name {
+    font-size: 2.1rem !important;
+    line-height: 1.25;
+    white-space: normal !important;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem !important;
+  }
+
+  .hero-desc {
+    font-size: 0.98rem !important;
+    margin-bottom: 40px !important;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+  
+  .hero-actions a {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Academic & Storytelling elements */
+  .story-title-h2 {
+    font-size: 1.7rem !important;
+    text-align: center !important;
+  }
+
+  .story-title-h2::after {
+    margin: 12px auto 0 !important;
+  }
+  
+  .story-narrative {
+    font-size: 0.96rem !important;
+    line-height: 1.7 !important;
+    text-align: center !important;
+  }
+
+  .education-card-story {
+    padding: 20px !important;
+  }
+
+  .education-degree-story {
+    font-size: 1.2rem !important;
+  }
+  
+  .education-school-story {
+    font-size: 0.95rem !important;
+  }
+
+  /* Work Experience timeline */
+  .timeline-story {
+    padding-left: 20px !important;
+  }
+  
+  .timeline-dot-story {
+    left: -25px !important;
+    width: 10px;
+    height: 10px;
+  }
+  
+  .timeline-card-story {
+    padding: 20px !important;
+  }
+
+  .timeline-job-story {
+    font-size: 1.1rem !important;
+  }
+  
+  .timeline-company-story {
+    font-size: 0.88rem !important;
+  }
+  
+  .timeline-meta-story {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+  }
+
+  .experience-doc-wrap {
+    width: 100% !important;
+    height: 160px !important;
+    max-width: 100% !important;
+  }
+
+  /* Training list */
+  .training-story-card {
+    padding: 16px !important;
+  }
+  
+  .training-story-title {
+    font-size: 1rem !important;
+  }
+
+  .training-doc-wrap {
+    width: 100% !important;
+    height: 140px !important;
+    max-width: 100% !important;
+  }
+
+  /* Skills Showcase */
+  .skills-showcase-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+  
+  .skills-subcategory-wrap {
+    padding: 16px !important;
+  }
+
+  .skill-story-card {
+    padding: 12px !important;
+  }
+  
+  .skill-story-name {
+    font-size: 0.82rem !important;
+  }
+  
+  /* Contact section */
+  .contact-container {
+    padding: 30px 20px !important;
+  }
+  
+  .contact-text {
+    font-size: 0.96rem !important;
+  }
+
+  .contact-links {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .contact-links a {
+    width: 100% !important;
+  }
+}
+
+/* Very Small Screens (< 480px) */
+@media (max-width: 480px) {
+  .hero-name {
+    font-size: 1.7rem !important;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem !important;
+  }
+
+  .skills-showcase-grid {
+    grid-template-columns: 1fr !important; /* Single column on very narrow devices */
+  }
+
+  .polaroid-snapshot-frame {
+    padding: 12px 12px 20px !important;
+  }
+
+  .polaroid-img-wrap {
+    height: 240px !important;
+  }
+
+  .handwritten-text {
+    font-size: 1.25rem !important;
   }
 }

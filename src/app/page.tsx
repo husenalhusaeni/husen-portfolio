@@ -10,6 +10,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [lang, setLang] = useState<"EN" | "ID">("EN"); // Bahasa Inggris sebagai bahasa utama
   const [activeImage, setActiveImage] = useState<string | null>(null); // State Lightbox Modal
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // State Hamburger Menu
 
   useEffect(() => {
     async function fetchExperiences() {
@@ -106,64 +107,78 @@ export default function Home() {
         </Link>
 
         {/* Kontainer Link Menu (Rapat Kanan) */}
-        <ul className="nav-links">
+        <ul className={`nav-links ${mobileMenuOpen ? "mobile-active" : ""}`}>
           <li>
-            <a href="#home">{t.navHome}</a>
+            <a href="#home" onClick={() => setMobileMenuOpen(false)}>{t.navHome}</a>
           </li>
           <li>
-            <a href="#education">{t.navEducation}</a>
+            <a href="#education" onClick={() => setMobileMenuOpen(false)}>{t.navEducation}</a>
           </li>
           {workExperiences.length > 0 && (
             <li>
-              <a href="#experience">{t.navExperience}</a>
+              <a href="#experience" onClick={() => setMobileMenuOpen(false)}>{t.navExperience}</a>
             </li>
           )}
           {trainingCertifications.length > 0 && (
             <li>
-              <a href="#training">{t.navTraining}</a>
+              <a href="#training" onClick={() => setMobileMenuOpen(false)}>{t.navTraining}</a>
             </li>
           )}
           <li>
-            <a href="#skills">{t.navSkills}</a>
+            <a href="#skills" onClick={() => setMobileMenuOpen(false)}>{t.navSkills}</a>
           </li>
           <li>
-            <a href="#contact">{t.navContact}</a>
+            <a href="#contact" onClick={() => setMobileMenuOpen(false)}>{t.navContact}</a>
           </li>
         </ul>
 
-        {/* Pemilih Bahasa (Language Selector) */}
-        <div style={{ display: "flex", gap: "6px", alignItems: "center", zIndex: 1001 }}>
+        {/* Header Right Area: Language Selector & Hamburger Icon */}
+        <div style={{ display: "flex", gap: "12px", alignItems: "center", zIndex: 1001 }}>
+          {/* Pemilih Bahasa (Language Selector) */}
+          <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+            <button
+              onClick={() => setLang("EN")}
+              className="btn-secondary"
+              style={{
+                padding: "4px 8px",
+                fontSize: "0.75rem",
+                borderColor: lang === "EN" ? "var(--accent-primary)" : "rgba(0,0,0,0.06)",
+                background: lang === "EN" ? "rgba(124, 58, 237, 0.08)" : "transparent",
+                color: lang === "EN" ? "var(--accent-primary)" : "var(--text-secondary)",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontWeight: 700
+              }}
+            >
+              EN
+            </button>
+            <button
+              onClick={() => setLang("ID")}
+              className="btn-secondary"
+              style={{
+                padding: "4px 8px",
+                fontSize: "0.75rem",
+                borderColor: lang === "ID" ? "var(--accent-primary)" : "rgba(0,0,0,0.06)",
+                background: lang === "ID" ? "rgba(124, 58, 237, 0.08)" : "transparent",
+                color: lang === "ID" ? "var(--accent-primary)" : "var(--text-secondary)",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontWeight: 700
+              }}
+            >
+              ID
+            </button>
+          </div>
+
+          {/* Hamburger Menu Toggle (Mobile Only) */}
           <button
-            onClick={() => setLang("EN")}
-            className="btn-secondary"
-            style={{
-              padding: "4px 8px",
-              fontSize: "0.75rem",
-              borderColor: lang === "EN" ? "var(--accent-primary)" : "rgba(0,0,0,0.06)",
-              background: lang === "EN" ? "rgba(124, 58, 237, 0.08)" : "transparent",
-              color: lang === "EN" ? "var(--accent-primary)" : "var(--text-secondary)",
-              borderRadius: "6px",
-              cursor: "pointer",
-              fontWeight: 700
-            }}
+            className={`menu-toggle ${mobileMenuOpen ? "open" : ""}`}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle Menu"
           >
-            EN
-          </button>
-          <button
-            onClick={() => setLang("ID")}
-            className="btn-secondary"
-            style={{
-              padding: "4px 8px",
-              fontSize: "0.75rem",
-              borderColor: lang === "ID" ? "var(--accent-primary)" : "rgba(0,0,0,0.06)",
-              background: lang === "ID" ? "rgba(124, 58, 237, 0.08)" : "transparent",
-              color: lang === "ID" ? "var(--accent-primary)" : "var(--text-secondary)",
-              borderRadius: "6px",
-              cursor: "pointer",
-              fontWeight: 700
-            }}
-          >
-            ID
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
         </div>
       </nav>
@@ -208,7 +223,7 @@ export default function Home() {
               <p style={{ marginTop: "12px" }}>
                 {lang === "EN"
                   ? "Studying Business Management provided me with core knowledge in operations and workflows. However, my passion for logic and hardware drove me to self-study Embedded Electronics and Microcontroller engineering."
-                  : "Mempelajari Manajemen Bisnis membekali saya dengan pemahaman mendalam tentang manajemen operasional dan alur kerja. Namun, ketertarikan saya pada logika dan perangkat keras mendorong saya mempelajari Elektronika Tertanam (Embedded) dan mikrokontroler secara otodidak."}
+                  : "Mempelajari Manajemen Bisnis membekali saya dengan pemahaman mendalam tentang manajemen operasional dan alur kerja. Namun, ketertarikan saya pada logika dan perangkat keras mendorong saya mempelajari Elektronika Tertanam (Embedded) dan mikrokontroler melalu pelatihan keentrian ketenagakerjaan."}
               </p>
             </div>
 
@@ -491,8 +506,8 @@ export default function Home() {
             <div className="story-narrative">
               <p>
                 {lang === "EN"
-                  ? "Over the years, I have established a balanced capability structure. From developing low-latency embedded firmware on microcontrollers to deploying IoT hardware networks, and supervising corporate service operations with customer diplomacy."
-                  : "Selama bertahun-tahun, saya telah membangun struktur kompetensi yang seimbang. Mulai dari menulis firmware mikrokontroler latensi rendah, mengintegrasikan sensor IoT, hingga memimpin layanan bisnis dengan diplomasi pelanggan."}
+                  ? "Over the years, I've built a balanced competency structure, spanning Management, Service, and IoT Engineering, enabling me to maximize my potential based on the job description. This ranges from writing low-latency microcontroller firmware and integrating IoT sensors to leading business services with customer diplomacy, and maintaining business relationships between customers and the company in accordance with established SOPs."
+                  : "Selama bertahun - tahun, saya telah membangun struktur kompetensi yang seimbang. Mulai di bidang Manajemen, Pelayanan Jasa, maupun IoT Engineer, sehingga dapat mengoptimalkan potensi yang saya miliki sesuai jobdesk yang di butuhkan. Mulai dari menulis firmware mikrokontroler latensi rendah, mengintegrasikan sensor IoT, hingga memimpin layanan bisnis dengan diplomasi pelanggan, serta dapat menjalani hubungan bisnis antara customer dan perusahaan sesuai dengan SOP yang tertera."}
               </p>
             </div>
 
