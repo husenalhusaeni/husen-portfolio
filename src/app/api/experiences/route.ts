@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { type, title, company, location, startDate, endDate, description, imageUrl } = body;
+    const { type, title, company, location, startDate, endDate, description, imageUrl, titleID, companyID, locationID, descriptionID } = body;
 
     const isTraining = type === "TRAINING";
     if (!title || !company || !location || !startDate || (!isTraining && !endDate) || !description) {
@@ -51,6 +51,10 @@ export async function POST(request: Request) {
         endDate,
         description,
         imageUrl: imageUrl || "/avatar.jpg",
+        titleID: titleID || title,
+        companyID: companyID || company,
+        locationID: locationID || location,
+        descriptionID: descriptionID || description,
       },
     });
 

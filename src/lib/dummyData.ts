@@ -8,6 +8,10 @@ export interface Experience {
   endDate: string;
   description: string;
   imageUrl: string | null;
+  titleID?: string | null;
+  companyID?: string | null;
+  locationID?: string | null;
+  descriptionID?: string | null;
 }
 
 // Kamus Dwi-Bahasa untuk Konten Statis
@@ -81,6 +85,17 @@ export const translations = {
 // Helper Penerjemah untuk Data Dinamis Bawaan (Seed)
 export function translateItem(item: Experience, currentLang: "EN" | "ID"): Experience {
   if (currentLang === "EN") return item;
+
+  // Jika ada terjemahan kustom dari database, pakai langsung
+  if (item.titleID || item.descriptionID) {
+    return {
+      ...item,
+      title: item.titleID || item.title,
+      description: item.descriptionID || item.description,
+      company: item.companyID || item.company,
+      location: item.locationID || item.location,
+    };
+  }
 
   const itemTranslations: Record<string, { title?: string; company?: string; description?: string; location?: string }> = {
     "Customer Service Supervisor": {

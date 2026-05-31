@@ -15,6 +15,10 @@ interface Experience {
   endDate: string;
   description: string;
   imageUrl: string | null;
+  titleID?: string | null;
+  companyID?: string | null;
+  locationID?: string | null;
+  descriptionID?: string | null;
 }
 
 interface AdminDashboardProps {
@@ -24,12 +28,21 @@ interface AdminDashboardProps {
 export default function AdminDashboard({ initialExperiences }: AdminDashboardProps) {
   const [experiences, setExperiences] = useState<Experience[]>(initialExperiences);
   const [type, setType] = useState("WORK");
+  
+  // English Fields
   const [title, setTitle] = useState("");
   const [company, setCompany] = useState("");
   const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
+  
+  // Indonesian Fields
+  const [titleID, setTitleID] = useState("");
+  const [companyID, setCompanyID] = useState("");
+  const [locationID, setLocationID] = useState("");
+  const [descriptionID, setDescriptionID] = useState("");
+
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -101,6 +114,10 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
       endDate,
       description,
       imageUrl: imageUrl || "/avatar.jpg",
+      titleID,
+      companyID,
+      locationID,
+      descriptionID,
     };
 
     try {
@@ -165,12 +182,16 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
   function handleEditClick(exp: Experience) {
     setEditingId(exp.id);
     setType(exp.type || "WORK");
-    setTitle(exp.title);
-    setCompany(exp.company);
-    setLocation(exp.location);
-    setStartDate(exp.startDate);
-    setEndDate(exp.endDate);
-    setDescription(exp.description);
+    setTitle(exp.title || "");
+    setCompany(exp.company || "");
+    setLocation(exp.location || "");
+    setTitleID(exp.titleID || "");
+    setCompanyID(exp.companyID || "");
+    setLocationID(exp.locationID || "");
+    setStartDate(exp.startDate || "");
+    setEndDate(exp.endDate || "");
+    setDescription(exp.description || "");
+    setDescriptionID(exp.descriptionID || "");
     setImageUrl(exp.imageUrl);
     setError("");
     setSuccess("");
@@ -183,9 +204,13 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
     setTitle("");
     setCompany("");
     setLocation("");
+    setTitleID("");
+    setCompanyID("");
+    setLocationID("");
     setStartDate("");
     setEndDate("");
     setDescription("");
+    setDescriptionID("");
     setImageUrl(null);
   }
 
@@ -232,60 +257,124 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
               </select>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">
-                {type === "WORK" ? "Jabatan Pekerjaan *" : type === "PROJECT" ? "Nama Project *" : "Nama Pelatihan / Sertifikasi *"}
-              </label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder={type === "WORK" ? "Contoh: Customer Service Supervisor" : type === "PROJECT" ? "Contoh: Digitalisasi Pelaporan Transaksi Tol" : "Contoh: Sertifikasi Pelayanan Prima"}
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">
-                {type === "WORK" ? "Nama Perusahaan *" : type === "PROJECT" ? "Nama Perusahaan / Organisasi *" : "Lembaga Penyelenggara *"}
-              </label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder={type === "WORK" || type === "PROJECT" ? "Contoh: PT Jasa Marga (Persero) Tbk" : "Contoh: MarkPlus Institute"}
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-                required
-              />
-            </div>
-
+            {/* Row 1: Title (EN & ID) */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
               <div className="form-group">
-                <label className="form-label">Lokasi *</label>
+                <label className="form-label">
+                  {type === "WORK" ? "Jabatan Pekerjaan (EN) *" : type === "PROJECT" ? "Nama Project (EN) *" : "Nama Pelatihan (EN) *"}
+                </label>
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="Contoh: Jakarta"
+                  placeholder={type === "WORK" ? "e.g. Customer Service Supervisor" : type === "PROJECT" ? "e.g. Toll Gate Flow Optimization" : "e.g. Excellent Service Certification"}
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">
+                  {type === "WORK" ? "Jabatan Pekerjaan (ID)" : type === "PROJECT" ? "Nama Project (ID)" : "Nama Pelatihan (ID)"}
+                </label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder={type === "WORK" ? "Contoh: Supervisor Pelayanan Pelanggan" : type === "PROJECT" ? "Contoh: Optimalisasi Gardu Tol Otomatis" : "Contoh: Sertifikasi Pelayanan Prima"}
+                  value={titleID}
+                  onChange={(e) => setTitleID(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Row 2: Company/Institution (EN & ID) */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+              <div className="form-group">
+                <label className="form-label">
+                  {type === "WORK" ? "Nama Perusahaan (EN) *" : type === "PROJECT" ? "Perusahaan / Organisasi (EN) *" : "Lembaga Penyelenggara (EN) *"}
+                </label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder={type === "WORK" || type === "PROJECT" ? "e.g. PT Jasa Marga" : "e.g. MarkPlus Institute"}
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">
+                  {type === "WORK" ? "Nama Perusahaan (ID)" : type === "PROJECT" ? "Perusahaan / Organisasi (ID)" : "Lembaga Penyelenggara (ID)"}
+                </label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder={type === "WORK" || type === "PROJECT" ? "Contoh: PT Jasa Marga" : "Contoh: MarkPlus Institute"}
+                  value={companyID}
+                  onChange={(e) => setCompanyID(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Row 3: Location (EN & ID) */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+              <div className="form-group">
+                <label className="form-label">Lokasi (EN) *</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="e.g. Jakarta, Indonesia"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   required
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Lokasi (ID)</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="Contoh: Jakarta, Indonesia"
+                  value={locationID}
+                  onChange={(e) => setLocationID(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Row 4: Dates & Image */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1.2fr", gap: "16px" }}>
+              <div className="form-group">
+                <label className="form-label">
+                  {type === "TRAINING" ? "Tanggal Perolehan *" : "Tanggal Mulai *"}
+                </label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder={type === "TRAINING" ? "e.g. Aug 2023" : "e.g. Jan 2023"}
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">
+                  {type === "TRAINING" ? "Masa Berlaku" : "Tanggal Selesai *"}
+                </label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder={type === "TRAINING" ? "e.g. Forever / 2026" : "e.g. Present"}
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  required={type !== "TRAINING"}
                 />
               </div>
 
               <div className="form-group">
                 <label className="form-label">Dokumentasi Gambar / Logo</label>
                 <div className="image-upload-wrap">
-                  {/* <div className="image-preview-box">
-                    <Image
-                      src={imageUrl || "/avatar.jpg"}
-                      alt="Preview logo"
-                      width={50}
-                      height={50}
-                    />
-                  </div> */}
                   <div className="upload-btn-wrap">
-                    <span className="upload-label">
+                    <span className="upload-label" style={{ fontSize: "0.85rem", padding: "10px" }}>
                       {uploading ? "Mengunggah..." : "Pilih File"}
                     </span>
                     <input
@@ -300,44 +389,25 @@ export default function AdminDashboard({ initialExperiences }: AdminDashboardPro
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-              <div className="form-group">
-                <label className="form-label">
-                  {type === "TRAINING" ? "Tanggal Perolehan *" : "Tanggal Mulai *"}
-                </label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder={type === "TRAINING" ? "Contoh: Agustus 2023" : "Contoh: Januari 2023"}
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">
-                  {type === "TRAINING" ? "Masa Berlaku (Jika ada)" : "Tanggal Selesai *"}
-                </label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder={type === "TRAINING" ? "Contoh: Selamanya / 2026" : "Contoh: Sekarang atau Desember 2024"}
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  required={type !== "TRAINING"}
-                />
-              </div>
-            </div>
-
+            {/* Row 5: Descriptions (EN & ID) */}
             <div className="form-group">
-              <label className="form-label">Deskripsi & Tanggung Jawab *</label>
+              <label className="form-label">Deskripsi & Tanggung Jawab (EN) *</label>
               <textarea
                 className="form-textarea"
-                placeholder="• Tuliskan poin penjelasan utama Anda di sini&#10;• Gunakan simbol bullet (•) untuk baris baru agar tampil rapi di website utama"
+                placeholder="• Write your key description points here&#10;• Use bullet point (•) for new lines"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Deskripsi & Tanggung Jawab (ID)</label>
+              <textarea
+                className="form-textarea"
+                placeholder="• Tuliskan poin penjelasan Bahasa Indonesia Anda di sini&#10;• Gunakan simbol bullet (•) untuk baris baru"
+                value={descriptionID}
+                onChange={(e) => setDescriptionID(e.target.value)}
               />
             </div>
 

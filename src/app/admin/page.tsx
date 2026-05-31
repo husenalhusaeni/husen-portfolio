@@ -31,6 +31,10 @@ export default async function AdminPage() {
     endDate: exp.endDate,
     description: exp.description,
     imageUrl: exp.imageUrl,
+    titleID: exp.titleID || null,
+    companyID: exp.companyID || null,
+    locationID: exp.locationID || null,
+    descriptionID: exp.descriptionID || null,
   }));
 
   return <AdminDashboard initialExperiences={serializedExperiences} />;

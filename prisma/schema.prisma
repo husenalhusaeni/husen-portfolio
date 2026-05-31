@@ -10,15 +10,19 @@ datasource db {
 }
 
 model Experience {
-  id          String   @id @default(uuid())
-  type        String   @default("WORK")
-  title       String
-  company     String
-  location    String
-  startDate   String
-  endDate     String
-  description String
-  imageUrl    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(uuid())
+  type          String   @default("WORK")
+  title         String
+  company       String
+  location      String
+  startDate     String
+  endDate       String
+  description   String
+  imageUrl      String?
+  titleID       String?
+  companyID     String?
+  locationID    String?
+  descriptionID String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
